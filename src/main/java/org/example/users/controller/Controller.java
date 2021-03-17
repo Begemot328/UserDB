@@ -1,5 +1,7 @@
 package org.example.users.controller;
 
+import org.example.users.menu.Menu;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -47,9 +49,18 @@ public class Controller implements IController {
 	public static final String SEARCH_BY_DATE = "search a note by date";
 	public static final String MAIL = "mail adress";
 	public static final String ADD_NOTE = "add new note";
-	
+
+	@Override
+	public Object getParameter(Class classname, String name) {
+		return null;
+	}
+
+	@Override
+	public void run() {
+
+	}
+	/*
 	private Scanner scanner;
-	private NoteBook notebook;
 	private Menu currentMenu;
 	private Menu mainMenu;
 	private Menu notesMenu;
@@ -60,6 +71,7 @@ public class Controller implements IController {
 	
 	
 	public Controller() {
+
 		scanner = new Scanner(System.in);
 		logic = new NoteBookLogic(notebook);
 		
@@ -445,4 +457,6 @@ public class Controller implements IController {
 			System.exit(0);
 		}
 	}
+	*/
+
 }
