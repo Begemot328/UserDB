@@ -84,4 +84,16 @@ public class User {
     public User clone() {
         return new User(firstName, lastName, mail, phoneNumbers, roles);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", mail='" + mail + '\'' +
+                ", phoneNumbers=" + phoneNumbers +
+                ", roles=" + roles +
+                '}';
+    }
 }

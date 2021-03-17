@@ -17,16 +17,18 @@ public class TestUserDomImpl {
         Set<String> numbers = new HashSet<>();
         numbers.add("375333063326");
         User user = new UserFactory().createUser(
-                "Ivan", "Ivanov" , "adf@fsdf.sdf", numbers, roles);
+                "Ivan", "Ivanov", "adf@fsdf.sdf", numbers, roles);
         user.setId(user.hashCode());
         UserDOM dom =
-        new UserDOMImpl();
+                new UserDOMImpl();
         dom.save(user);
-        dom.open(user.getId());
+        User user1 = dom.open(user.getId());
 
-        System.out.println(dom.open(user.getId()));
-        System.out.println(user.equals(dom.open(user.getId())));
+        System.out.println(user1);
+        System.out.println(user.equals(user1));
 
-
+        for (User user2 : dom.findAll()) {
+            System.out.println(user2);
+        }
     }
 }

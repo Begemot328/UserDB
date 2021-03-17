@@ -65,7 +65,6 @@ public class UserDOMImpl implements UserDOM {
             DOMSource source = new DOMSource(document);
 
             File file = new File(PATH + user.getId() + EXTENSION);
-            System.out.println(file.getAbsolutePath());
             StreamResult result = new StreamResult(
                     new FileWriter(PATH + user.getId() + EXTENSION));
             transformer.transform(source, result);
@@ -84,13 +83,18 @@ public class UserDOMImpl implements UserDOM {
 
     public User open(int id) throws UserDOMException {
         Document doc = null;
+        User result;
         try {
             doc = documentBuilder.parse(PATH + id + EXTENSION);
         } catch (SAXException | IOException e) {
             throw new UserDOMException(e);
         }
+        doc.normalizeDocument();
         Element root = doc.getDocumentElement();
-        return parseUser(getElement(root, USER));
+
+        result = parseUser(root);
+        result.setId(id);
+        return result;
     }
 
     public Set<User> findAll() throws UserDOMException {
@@ -134,7 +138,7 @@ public class UserDOMImpl implements UserDOM {
 
     private Set<Role> parseRoles(Element rolesElement) {
         Set<Role> roles = new HashSet<>();
-        NodeList nList = rolesElement.getElementsByTagName(ROLES);
+        NodeList nList = rolesElement.getElementsByTagName(ROLE);
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             String role = node.getTextContent();
@@ -145,7 +149,7 @@ public class UserDOMImpl implements UserDOM {
 
     private Set<String> parsePhones(Element phonesElement) {
         Set<String> phones = new HashSet<>();
-        NodeList nList = phonesElement.getElementsByTagName(PHONES);
+        NodeList nList = phonesElement.getElementsByTagName(PHONE);
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             phones.add(node.getTextContent());
@@ -185,7 +189,7 @@ public class UserDOMImpl implements UserDOM {
 
         Element phoneElement = document.createElement(PHONES);
         for (String phone : user.getPhoneNumbers()) {
-            roleElement.appendChild(textElement(PHONE, phone));
+            phoneElement.appendChild(textElement(PHONE, phone));
         }
         rootElement.appendChild(phoneElement);
 
