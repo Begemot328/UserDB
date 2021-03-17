@@ -1,11 +1,10 @@
 package org.example.users.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class User {
+
+    private int id;
     private String firstName;
     private String lastName;
     private String mail;
@@ -18,6 +17,7 @@ public class User {
         this.mail = mail;
         this.phoneNumbers = new HashSet<>();
         this.roles = new HashSet<>();
+
     }
 
      User (String firstName, String lastName, String mail, Set<String> phoneNumbers, Set<Role> roles) {
@@ -26,6 +26,14 @@ public class User {
         this.mail = mail;
         this.phoneNumbers = phoneNumbers;
         this.roles = roles;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -58,5 +66,22 @@ public class User {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return firstName.equals(user.firstName) && lastName.equals(user.lastName) && mail.equals(user.mail) && phoneNumbers.equals(user.phoneNumbers) && roles.equals(user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, mail, phoneNumbers, roles);
+    }
+
+    public User clone() {
+        return new User(firstName, lastName, mail, phoneNumbers, roles);
     }
 }

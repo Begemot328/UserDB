@@ -13,4 +13,6 @@ public class UserFactory {
     public User createUser(String firstName, String lastName, String mail) {
         return new User (firstName, lastName, mail);
     }
+
+
 }
