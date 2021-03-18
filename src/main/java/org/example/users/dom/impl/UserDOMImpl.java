@@ -39,7 +39,7 @@ public class UserDOMImpl implements UserDOM {
     private static final String EXTENSION = ".xml";
     private static final String PATH = "users/";
 
-    private final Document document;
+    private Document document;
     private final DocumentBuilder documentBuilder;
 
     public UserDOMImpl() throws UserDOMException {
@@ -57,16 +57,15 @@ public class UserDOMImpl implements UserDOM {
     }
 
     public void save(User user) throws UserDOMException {
+        document = documentBuilder.newDocument();
         document.appendChild(getUserElement(user));
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-        try {
+        try (FileWriter writer = new FileWriter(PATH + user.getId() + EXTENSION)) {
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
 
-            File file = new File(PATH + user.getId() + EXTENSION);
-            StreamResult result = new StreamResult(
-                    new FileWriter(PATH + user.getId() + EXTENSION));
+            StreamResult result = new StreamResult(writer);
             transformer.transform(source, result);
         } catch (TransformerException | IOException e) {
             throw new UserDOMException(e);
@@ -75,9 +74,10 @@ public class UserDOMImpl implements UserDOM {
 
     public void delete(User user) throws UserDOMException {
         try {
-            Files.delete(new File(PATH + user.getId() + EXTENSION).toPath());
+            File file = new File(PATH + user.getId() + EXTENSION);
+            Files.delete(file.toPath());
         } catch (IOException e) {
-            throw new UserDOMException("User not found");
+            throw new UserDOMException("User not found", e);
         }
     }
 

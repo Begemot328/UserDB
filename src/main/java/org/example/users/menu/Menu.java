@@ -1,6 +1,6 @@
 package org.example.users.menu;
 
-import org.example.users.controller.ICommand;
+import org.example.users.command.ICommand;
 import org.example.users.controller.IController;
 
 public class Menu {

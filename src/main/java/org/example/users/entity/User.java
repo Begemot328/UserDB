@@ -17,7 +17,6 @@ public class User {
         this.mail = mail;
         this.phoneNumbers = new HashSet<>();
         this.roles = new HashSet<>();
-
     }
 
      User (String firstName, String lastName, String mail, Set<String> phoneNumbers, Set<Role> roles) {

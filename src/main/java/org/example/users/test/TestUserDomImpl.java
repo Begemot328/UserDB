@@ -18,17 +18,25 @@ public class TestUserDomImpl {
         numbers.add("375333063326");
         User user = new UserFactory().createUser(
                 "Ivan", "Ivanov", "adf@fsdf.sdf", numbers, roles);
+        System.out.println(user.hashCode());
+        User user1 = new UserFactory().createUser(
+                "Ivan5", "Ivanov5", "adf@fsdf5.sdf", numbers, roles);
+        System.out.println(user1.hashCode());
+
         user.setId(user.hashCode());
+        user1.setId(user1.hashCode());
         UserDOM dom =
                 new UserDOMImpl();
         dom.save(user);
-        User user1 = dom.open(user.getId());
+        dom.save(user1);
 
-        System.out.println(user1);
-        System.out.println(user.equals(user1));
+        dom.delete(user1);
+
 
         for (User user2 : dom.findAll()) {
             System.out.println(user2);
         }
+
+
     }
 }

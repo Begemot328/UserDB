@@ -49,7 +49,7 @@ public class Runner {
         logger.info("Notebook started.");
         //logger.warn("Something to warn");
         //logger.error("Something failed.");
-		IController controller = new Controller();
+		IController controller = new Controller(null, System.out, System.in);
 		controller.run();
 	}	
 }

@@ -1,15 +1,20 @@
 package org.example.users.controller;
 
+import org.example.users.command.ICommand;
+import org.example.users.exceptions.CommandException;
 import org.example.users.menu.Menu;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 
 public class Controller implements IController {
-
 	private final static String STRING = String.class.getName();
 
+	private final static String ERROR_SPOTTED = "Error spotted!";
 	private final static String ANYKEY = "Press any key to continue...";
 	private final static String EMPTY = "is empty";
 	private final static String ENTER_CORRECT_DATA = "Enter valid data!";
@@ -50,13 +55,78 @@ public class Controller implements IController {
 	public static final String MAIL = "mail adress";
 	public static final String ADD_NOTE = "add new note";
 
+	private Menu currentMenu;
+	private PrintStream outputStream;
+	private InputStream inputStream;
+	private Scanner scanner;
+
+	public Controller(Menu menu, PrintStream outputStream, InputStream inputStream) {
+		this.currentMenu = menu;
+		this.outputStream = outputStream;
+		this.inputStream = inputStream;
+		this.scanner = new Scanner(inputStream);
+	}
+
+	public void setCurrentMenu(Menu currentMenu) {
+		this.currentMenu = currentMenu;
+	}
+
 	@Override
 	public Object getParameter(Class classname, String name) {
 		return null;
 	}
 
 	@Override
+	public InputStream getReader() {
+		return null;
+	}
+
+	@Override
+	public PrintStream getWriter() {
+		return null;
+	}
+
+	@Override
 	public void run() {
+			while (true) {
+				readCommand();
+			}
+	}
+
+		private void readCommand() {
+			ICommand command = null;
+			writeMenu(currentMenu);
+			int commandCode = 0;
+			if (scanner.hasNext()) {
+				try {
+					commandCode = Integer.parseInt(scanner.next());
+				} catch (Exception e) {
+					outputStream.println(WRONG_COMMAND);
+				}
+				command = currentMenu.getCommand(commandCode);
+				if (command == null) {
+					outputStream.println(NO_SUCH_COMMAND);
+					return;
+				}
+			}
+			try {
+				command.execute();
+			} catch (CommandException e) {
+				outputStream.println(ERROR_SPOTTED + ": " + e.getMessage());
+			}
+		}
+		private void writeMenu(Menu menu) {
+			ICommand[] commands = new ICommand[menu.getCommands().length];
+			commands = menu.getCommands().clone();
+			for (int i = 1; i < commands.length; i++) {
+				if (commands[i] == null) {
+					continue;
+				}
+				outputStream.println(COMMAND_DESCRIPTION.replace(COMMAND, i + "").replace(
+						DO_SOMETHING, commands[i].getText()));
+			}
+		}
+
 
 	}
 	/*
@@ -459,4 +529,4 @@ public class Controller implements IController {
 	}
 	*/
 
-}
+
